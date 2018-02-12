@@ -71,23 +71,6 @@ namespace FM.Web.Tests
         {
             //Arrange
             string teamName = "testName";
-            var expextedPlayers = new List<PlayerDTO>()
-            {
-                new PlayerDTO
-                {
-                    Id = 1,
-                    Name = "Test1",
-                    Position = "TestPos1",
-                    Age = 25
-                },
-                new PlayerDTO
-                {
-                    Id = 2,
-                    Name = "Test2",
-                    Position = "TestPos2",
-                    Age = 25
-                }
-            };
             _mockFMService.Setup(s => s.GetAllPlayersOfTheTeam(teamName)).Throws<Exception>();
             //Act
             var result = await _playerController.Get(teamName) as BadRequestObjectResult;
