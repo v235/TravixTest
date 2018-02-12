@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using FM.DAL.Models;
 using FM.Services.Models;
 
 namespace FM.Services
