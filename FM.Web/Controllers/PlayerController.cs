@@ -13,7 +13,6 @@ using Microsoft.Extensions.Logging;
 
 namespace FM.Web.Controllers
 {
-    [Route("api/teams/{teamName}/players")]
     public class PlayerController : Controller
     {
         private readonly IFMService _fmService;
@@ -24,13 +23,13 @@ namespace FM.Web.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get(string teamName)
+        [HttpGet("api/teams/{teamId}")]
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
                 return Ok(Mapper.Map<IEnumerable<CreatePlayerViewModel>>
-                    (await _fmService.GetAllPlayersOfTheTeam(teamName)));
+                    (await _fmService.GetAllPlayersOfTheTeam(id)));
             }
             catch (Exception ex)
             {
@@ -39,18 +38,18 @@ namespace FM.Web.Controllers
             return BadRequest("Failed to get players");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(string teamName, [FromBody] CreatePlayerViewModel player)
+        [HttpPost("api/teams/player")]
+        public async Task<IActionResult> Post([FromBody] CreatePlayerViewModel player)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     var newPlayer = Mapper.Map<PlayerDTO>(player);
-
-                    if (await _fmService.AddNewPlayerToTeam(teamName, newPlayer))
+                    var createdPlayerId = await _fmService.AddNewPlayer(newPlayer);
+                    if (createdPlayerId>0)
                     {
-                        return Created($"api/teams/{teamName}/players/{newPlayer.Name}",
+                        return Created($"api/teams/{player.TeamId}/players/{createdPlayerId}",
                             Mapper.Map<CreatePlayerViewModel>(newPlayer));
                     }
                 }

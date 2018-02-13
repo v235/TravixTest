@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FM.DAL.Models
 {
@@ -18,6 +19,8 @@ namespace FM.DAL.Models
 
         public int Age { get; set; }
 
-        public EntityTeam Team { get; set; }
+        [ForeignKey("Team")]
+        public int? TeamId { get; set; }
+        public virtual EntityTeam Team { get; set; }
     }
 }

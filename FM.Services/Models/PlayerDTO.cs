@@ -14,6 +14,8 @@ namespace FM.Services.Models
 
         public int Age { get; set; }
 
+        public int? TeamId { get; set; }
+
         public TeamDTO Team { get; set; }
     }
 }

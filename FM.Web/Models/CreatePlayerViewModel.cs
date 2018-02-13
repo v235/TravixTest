@@ -17,6 +17,8 @@ namespace FM.Web.Models
         public string Position { get; set; }
 
         public int Age { get; set; }
+
+        public int TeamId { get; set; }
     }
 }
 

@@ -24,7 +24,7 @@ namespace FM.DAL.Repositories
 
         public async Task<EntityTeam> GetById(int id)
         {
-            return await _context.Teams.FindAsync(id);
+            return await _context.Teams.Include(p => p.Players).SingleOrDefaultAsync(t=>t.Id==id);
         }
 
         public async Task<EntityTeam> GetTeamByName(string name)

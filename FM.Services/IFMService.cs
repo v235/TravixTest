@@ -9,15 +9,15 @@ namespace FM.Services
 {
     public interface IFMService
     {
-        Task<IEnumerable<PlayerDTO>> GetAllPlayersOfTheTeam(string teamName);
+        Task<IEnumerable<PlayerDTO>> GetAllPlayersOfTheTeam(int id);
 
         Task<IEnumerable<TeamDTO>> GetTeams();
 
-        Task<TeamDTO> GetTeam(int id);
+        Task<TeamDTO> GetTeam(int teamId);
 
-        Task<bool> AddNewPlayerToTeam(string teamName, PlayerDTO newPlayer);
+        Task<int> AddNewPlayer(PlayerDTO newPlayer);
 
-        Task<bool> AddNewTeam(TeamDTO newTeam);
+        Task<int> AddNewTeam(TeamDTO newTeam);
 
         Task<bool> UpdateTeamValue(TeamDTO newTeamValue);
 

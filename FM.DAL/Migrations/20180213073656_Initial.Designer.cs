@@ -11,7 +11,7 @@ using System;
 namespace FM.DAL.Migrations
 {
     [DbContext(typeof(FMContext))]
-    [Migration("20180211115836_Initial")]
+    [Migration("20180213073656_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

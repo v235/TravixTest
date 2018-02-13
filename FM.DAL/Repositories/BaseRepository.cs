@@ -16,10 +16,12 @@ namespace FM.DAL.Repositories
             _entities = _context.Set<T>();
         }
 
-        public async Task<bool> Create(T entity)
+        public async Task<T> Create(T entity)
         {
             await _entities.AddAsync(entity);
-            return await SaveChanges();
+            if (await SaveChanges())
+                return entity;
+            return null;
         }
 
         public async Task<bool> Update(T entity)

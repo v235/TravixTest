@@ -51,8 +51,12 @@ namespace FM.Web
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-            FMContextSeedData seedData, ILoggerFactory factory)
+           FMContextSeedData seedData, ILoggerFactory factory)
         {
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                scope.ServiceProvider.GetService<FMContext>().Database.Migrate();
+            }
             Mapper.Initialize(config =>
             {
                 config.CreateMap<CreatePlayerViewModel, PlayerDTO>().ReverseMap();

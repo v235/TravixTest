@@ -11,6 +11,6 @@ namespace FM.DAL.Models
         [StringLength(25)]
         public string Name { get; set; }
 
-        public ICollection<EntityPlayer> Players { get; set; }
+        public virtual ICollection<EntityPlayer> Players { get; set; }
     }
 }

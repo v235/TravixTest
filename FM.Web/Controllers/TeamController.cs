@@ -37,12 +37,12 @@ namespace FM.Web.Controllers
             return BadRequest("Failed to get teams");
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{teamId}")]
+        public async Task<IActionResult> Get(int teamId)
         {
             try
             {
-                return Ok(Mapper.Map<CreateTeamViewModel>(await _fmService.GetTeam(id)));
+                return Ok(Mapper.Map<CreateTeamViewModel>(await _fmService.GetTeam(teamId)));
             }
             catch (Exception ex)
             {
@@ -59,10 +59,9 @@ namespace FM.Web.Controllers
                 if (ModelState.IsValid)
                 {
                     var newTeam = Mapper.Map<TeamDTO>(team);
-                    if (await _fmService.AddNewTeam(newTeam))
-                    {
-                        return Created($"api/Team/{team.Name}", Mapper.Map<CreateTeamViewModel>(newTeam));
-                    }
+                    var createdTeamId = await _fmService.AddNewTeam(newTeam);
+                    if(createdTeamId>0)
+                    return Created($"api/teams/{createdTeamId}", Mapper.Map<CreateTeamViewModel>(newTeam));
                 }
             }
             catch (Exception ex)

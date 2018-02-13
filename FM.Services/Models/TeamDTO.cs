@@ -10,6 +10,5 @@ namespace FM.Services.Models
 
         public string Name { get; set; }
 
-        public List<PlayerDTO> Players { get; set; }
     }
 }

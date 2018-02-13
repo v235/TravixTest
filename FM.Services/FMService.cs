@@ -21,22 +21,18 @@ namespace FM.Services
             _playerRepository = playerRepository;
         }
 
-        public async Task<IEnumerable<PlayerDTO>> GetAllPlayersOfTheTeam(string teamName)
+        public async Task<IEnumerable<PlayerDTO>> GetAllPlayersOfTheTeam(int id)
         {
-            var players = await _teamRepository.GetTeamByName(teamName);
-            return Mapper.Map<IEnumerable<PlayerDTO>>(players.Players.OrderBy(p => p.Name)).ToList();
+            var players = (await _teamRepository.GetById(id)).Players.OrderBy(p => p.Name).ToList();
+            return Mapper.Map<IEnumerable<PlayerDTO>>(players);
         }
 
-        public async Task<bool> AddNewPlayerToTeam(string teamName, PlayerDTO newPlayer)
+        public async Task<int> AddNewPlayer(PlayerDTO newPlayer)
         {
-            var team = await _teamRepository.GetTeamByName(teamName);
-            if (team != null)
-            {
-                team.Players.Add(Mapper.Map<EntityPlayer>(newPlayer));
-                return await _playerRepository.Create(Mapper.Map<EntityPlayer>(newPlayer));
-            }
-
-            return false;
+            var createdPlayer= await _playerRepository.Create(Mapper.Map<EntityPlayer>(newPlayer));
+            if (createdPlayer != null)
+                return createdPlayer.Id;
+            return 0;
         }
 
 
@@ -45,14 +41,17 @@ namespace FM.Services
             return Mapper.Map<IEnumerable<TeamDTO>>(await _teamRepository.GetAll());
         }
 
-        public async Task<TeamDTO> GetTeam(int id)
+        public async Task<TeamDTO> GetTeam(int teamId)
         {
-            return Mapper.Map<TeamDTO>(await _teamRepository.GetById(id));
+            return Mapper.Map<TeamDTO>(await _teamRepository.GetById(teamId));
         }
 
-        public async Task<bool> AddNewTeam(TeamDTO newTeam)
+        public async Task<int> AddNewTeam(TeamDTO newTeam)
         {
-            return await _teamRepository.Create(Mapper.Map<EntityTeam>(newTeam));
+            var createdTeam = await _teamRepository.Create(Mapper.Map<EntityTeam>(newTeam));
+            if (createdTeam != null)
+                return createdTeam.Id;
+            return 0;
         }
 
         public async Task<bool> UpdateTeamValue(TeamDTO newTeamValue)
@@ -70,7 +69,5 @@ namespace FM.Services
 
             return false;
         }
-
-
     }
 }
