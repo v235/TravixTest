@@ -16,26 +16,26 @@ namespace FM.DAL.Repositories
             _entities = _context.Set<T>();
         }
 
-        public async Task<T> Create(T entity)
+        public async Task<T> CreateAsync(T entity)
         {
             await _entities.AddAsync(entity);
-            if (await SaveChanges())
+            if (await SaveChangesAsync())
                 return entity;
             return null;
         }
 
-        public async Task<bool> Update(T entity)
+        public async Task<bool> UpdateAsync(T entity)
         {
             _entities.Update(entity);
-            return await SaveChanges();
+            return await SaveChangesAsync();
         }
-        public async Task<bool> Delete(T entity)
+        public async Task<bool> DeleteAsync(T entity)
         {
             _entities.Remove(entity);
-            return await SaveChanges();
+            return await SaveChangesAsync();
         }
 
-        private async Task<bool> SaveChanges()
+        private async Task<bool> SaveChangesAsync()
         {
             return (await _context.SaveChangesAsync()) > 0;
         }

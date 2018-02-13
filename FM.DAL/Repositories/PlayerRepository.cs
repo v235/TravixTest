@@ -16,7 +16,7 @@ namespace FM.DAL.Repositories
             _context = context;
         }
 
-        public Task<EntityPlayer> GetById(int id)
+        public Task<EntityPlayer> GetByIdAsync(int id)
         {
             return _context.Players.FindAsync(id);
         }

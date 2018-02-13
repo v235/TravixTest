@@ -24,11 +24,11 @@ namespace FM.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAsync()
         {
             try
             {
-                return Ok(Mapper.Map<IEnumerable<CreateTeamViewModel>>(await _fmService.GetTeams()));
+                return Ok(Mapper.Map<IEnumerable<CreateTeamViewModel>>(await _fmService.GetTeamsAsync()));
             }
             catch (Exception ex)
             {
@@ -38,11 +38,11 @@ namespace FM.Web.Controllers
         }
 
         [HttpGet("{teamId}")]
-        public async Task<IActionResult> Get(int teamId)
+        public async Task<IActionResult> GetAsync(int teamId)
         {
             try
             {
-                return Ok(Mapper.Map<CreateTeamViewModel>(await _fmService.GetTeam(teamId)));
+                return Ok(Mapper.Map<CreateTeamViewModel>(await _fmService.GetTeamAsync(teamId)));
             }
             catch (Exception ex)
             {
@@ -52,14 +52,14 @@ namespace FM.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateTeamViewModel team)
+        public async Task<IActionResult> PostAsync([FromBody] CreateTeamViewModel team)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     var newTeam = Mapper.Map<TeamDTO>(team);
-                    var createdTeamId = await _fmService.AddNewTeam(newTeam);
+                    var createdTeamId = await _fmService.AddNewTeamAsync(newTeam);
                     if(createdTeamId>0)
                     return Created($"api/teams/{createdTeamId}", Mapper.Map<CreateTeamViewModel>(newTeam));
                 }
@@ -73,14 +73,14 @@ namespace FM.Web.Controllers
 
         }
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] UpdateTeamViewModel team)
+        public async Task<IActionResult> PutAsync([FromBody] UpdateTeamViewModel team)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     var newTeamValue = Mapper.Map<TeamDTO>(team);
-                    if (await _fmService.UpdateTeamValue(newTeamValue))
+                    if (await _fmService.UpdateTeamValueAsync(newTeamValue))
                     {
                         return Ok(Mapper.Map<UpdateTeamViewModel>(newTeamValue));
                     }
@@ -95,13 +95,13 @@ namespace FM.Web.Controllers
 
         }
         [HttpDelete("{teamId}")]
-        public async Task<IActionResult> Delete(int teamId)
+        public async Task<IActionResult> DeleteAsync(int teamId)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    if (await _fmService.DeleteTeam(teamId))
+                    if (await _fmService.DeleteTeamAsync(teamId))
                     {
                         return Ok();
                     }

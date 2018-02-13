@@ -24,12 +24,12 @@ namespace FM.Web.Controllers
         }
 
         [HttpGet("api/teams/{teamId}/players")]
-        public async Task<IActionResult> Get(int teamId)
+        public async Task<IActionResult> GetAsync(int teamId)
         {
             try
             {
                 return Ok(Mapper.Map<IEnumerable<CreatePlayerViewModel>>
-                    (await _fmService.GetAllPlayersOfTheTeam(teamId)));
+                    (await _fmService.GetAllPlayersOfTheTeamAsync(teamId)));
             }
             catch (Exception ex)
             {
@@ -39,12 +39,12 @@ namespace FM.Web.Controllers
         }
 
         [HttpGet("api/teams/{teamId}/players/{playerId}")]
-        public async Task<IActionResult> GetById(int playerId)
+        public async Task<IActionResult> GetByIdAsync(int playerId)
         {
             try
             {
                 return Ok(Mapper.Map<CreatePlayerViewModel>
-                    (await _fmService.GetPlayer(playerId)));
+                    (await _fmService.GetPlayerAsync(playerId)));
             }
             catch (Exception ex)
             {
@@ -54,14 +54,14 @@ namespace FM.Web.Controllers
         }
 
         [HttpPost("api/teams/addNewPlayer")]
-        public async Task<IActionResult> Post([FromBody] CreatePlayerViewModel player)
+        public async Task<IActionResult> PostAsync([FromBody] CreatePlayerViewModel player)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     var newPlayer = Mapper.Map<PlayerDTO>(player);
-                    var createdPlayerId = await _fmService.AddNewPlayer(newPlayer);
+                    var createdPlayerId = await _fmService.AddNewPlayerAsync(newPlayer);
                     if (createdPlayerId>0)
                     {
                         return Created($"api/teams/{player.TeamId}/players/{createdPlayerId}",

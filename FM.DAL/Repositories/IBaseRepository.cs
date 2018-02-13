@@ -7,8 +7,8 @@ namespace FM.DAL.Repositories
 {
     public interface IBaseRepository<T> where T : class
     {
-        Task<T> Create(T entity);
-        Task<bool> Update(T entity);
-        Task<bool> Delete(T entity);
+        Task<T> CreateAsync(T entity);
+        Task<bool> UpdateAsync(T entity);
+        Task<bool> DeleteAsync(T entity);
     }
 }

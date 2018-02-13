@@ -8,7 +8,7 @@ namespace FM.DAL.Repositories
 {
     public interface ITeamRepository : IBaseRepository<EntityTeam>
     {
-        Task<IEnumerable<EntityTeam>> GetAll();
-        Task<EntityTeam> GetById(int id);
+        Task<IEnumerable<EntityTeam>> GetAllAsync();
+        Task<EntityTeam> GetByIdAsync(int id);
     }
 }

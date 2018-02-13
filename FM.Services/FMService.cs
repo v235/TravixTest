@@ -21,55 +21,55 @@ namespace FM.Services
             _playerRepository = playerRepository;
         }
 
-        public async Task<IEnumerable<PlayerDTO>> GetAllPlayersOfTheTeam(int teamId)
+        public async Task<IEnumerable<PlayerDTO>> GetAllPlayersOfTheTeamAsync(int teamId)
         {
-            var players = (await _teamRepository.GetById(teamId)).Players.OrderBy(p => p.Name).ToList();
+            var players = (await _teamRepository.GetByIdAsync(teamId)).Players.OrderBy(p => p.Name).ToList();
             return Mapper.Map<IEnumerable<PlayerDTO>>(players);
         }
 
-        public async Task<PlayerDTO> GetPlayer(int playerId)
+        public async Task<PlayerDTO> GetPlayerAsync(int playerId)
         {
-            return Mapper.Map<PlayerDTO>(await _playerRepository.GetById(playerId));
+            return Mapper.Map<PlayerDTO>(await _playerRepository.GetByIdAsync(playerId));
         }
 
-        public async Task<int> AddNewPlayer(PlayerDTO newPlayer)
+        public async Task<int> AddNewPlayerAsync(PlayerDTO newPlayer)
         {
-            var createdPlayer= await _playerRepository.Create(Mapper.Map<EntityPlayer>(newPlayer));
+            var createdPlayer= await _playerRepository.CreateAsync(Mapper.Map<EntityPlayer>(newPlayer));
             if (createdPlayer != null)
                 return createdPlayer.Id;
             return 0;
         }
 
 
-        public async Task<IEnumerable<TeamDTO>> GetTeams()
+        public async Task<IEnumerable<TeamDTO>> GetTeamsAsync()
         {
-            return Mapper.Map<IEnumerable<TeamDTO>>(await _teamRepository.GetAll());
+            return Mapper.Map<IEnumerable<TeamDTO>>(await _teamRepository.GetAllAsync());
         }
 
-        public async Task<TeamDTO> GetTeam(int teamId)
+        public async Task<TeamDTO> GetTeamAsync(int teamId)
         {
-            return Mapper.Map<TeamDTO>(await _teamRepository.GetById(teamId));
+            return Mapper.Map<TeamDTO>(await _teamRepository.GetByIdAsync(teamId));
         }
 
-        public async Task<int> AddNewTeam(TeamDTO newTeam)
+        public async Task<int> AddNewTeamAsync(TeamDTO newTeam)
         {
-            var createdTeam = await _teamRepository.Create(Mapper.Map<EntityTeam>(newTeam));
+            var createdTeam = await _teamRepository.CreateAsync(Mapper.Map<EntityTeam>(newTeam));
             if (createdTeam != null)
                 return createdTeam.Id;
             return 0;
         }
 
-        public async Task<bool> UpdateTeamValue(TeamDTO newTeamValue)
+        public async Task<bool> UpdateTeamValueAsync(TeamDTO newTeamValue)
         {
-            return await _teamRepository.Update(Mapper.Map<EntityTeam>(newTeamValue));
+            return await _teamRepository.UpdateAsync(Mapper.Map<EntityTeam>(newTeamValue));
         }
 
-        public async Task<bool> DeleteTeam(int teamId)
+        public async Task<bool> DeleteTeamAsync(int teamId)
         {
-            var teamToDelete = await _teamRepository.GetById(teamId);
+            var teamToDelete = await _teamRepository.GetByIdAsync(teamId);
             if (teamToDelete != null)
             {
-                return await _teamRepository.Delete(teamToDelete);
+                return await _teamRepository.DeleteAsync(teamToDelete);
             }
 
             return false;
