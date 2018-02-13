@@ -21,10 +21,15 @@ namespace FM.Services
             _playerRepository = playerRepository;
         }
 
-        public async Task<IEnumerable<PlayerDTO>> GetAllPlayersOfTheTeam(int id)
+        public async Task<IEnumerable<PlayerDTO>> GetAllPlayersOfTheTeam(int teamId)
         {
-            var players = (await _teamRepository.GetById(id)).Players.OrderBy(p => p.Name).ToList();
+            var players = (await _teamRepository.GetById(teamId)).Players.OrderBy(p => p.Name).ToList();
             return Mapper.Map<IEnumerable<PlayerDTO>>(players);
+        }
+
+        public async Task<PlayerDTO> GetPlayer(int playerId)
+        {
+            return Mapper.Map<PlayerDTO>(await _playerRepository.GetById(playerId));
         }
 
         public async Task<int> AddNewPlayer(PlayerDTO newPlayer)
@@ -59,9 +64,9 @@ namespace FM.Services
             return await _teamRepository.Update(Mapper.Map<EntityTeam>(newTeamValue));
         }
 
-        public async Task<bool> DeleteTeam(string teamName)
+        public async Task<bool> DeleteTeam(int teamId)
         {
-            var teamToDelete = await _teamRepository.GetTeamByName(teamName);
+            var teamToDelete = await _teamRepository.GetById(teamId);
             if (teamToDelete != null)
             {
                 return await _teamRepository.Delete(teamToDelete);

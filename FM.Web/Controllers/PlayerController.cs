@@ -23,13 +23,13 @@ namespace FM.Web.Controllers
             _logger = logger;
         }
 
-        [HttpGet("api/teams/{teamId}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("api/teams/{teamId}/players")]
+        public async Task<IActionResult> Get(int teamId)
         {
             try
             {
                 return Ok(Mapper.Map<IEnumerable<CreatePlayerViewModel>>
-                    (await _fmService.GetAllPlayersOfTheTeam(id)));
+                    (await _fmService.GetAllPlayersOfTheTeam(teamId)));
             }
             catch (Exception ex)
             {
@@ -38,7 +38,22 @@ namespace FM.Web.Controllers
             return BadRequest("Failed to get players");
         }
 
-        [HttpPost("api/teams/player")]
+        [HttpGet("api/teams/{teamId}/players/{playerId}")]
+        public async Task<IActionResult> GetById(int playerId)
+        {
+            try
+            {
+                return Ok(Mapper.Map<CreatePlayerViewModel>
+                    (await _fmService.GetPlayer(playerId)));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to get player: {0}", ex);
+            }
+            return BadRequest("Failed to get player");
+        }
+
+        [HttpPost("api/teams/addNewPlayer")]
         public async Task<IActionResult> Post([FromBody] CreatePlayerViewModel player)
         {
             try

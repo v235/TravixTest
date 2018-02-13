@@ -94,14 +94,14 @@ namespace FM.Web.Controllers
             return BadRequest("Failed to update team values");
 
         }
-        [HttpDelete("{teamName}")]
-        public async Task<IActionResult> Delete(string teamName)
+        [HttpDelete("{teamId}")]
+        public async Task<IActionResult> Delete(int teamId)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    if (await _fmService.DeleteTeam(teamName))
+                    if (await _fmService.DeleteTeam(teamId))
                     {
                         return Ok();
                     }

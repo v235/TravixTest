@@ -9,7 +9,9 @@ namespace FM.Services
 {
     public interface IFMService
     {
-        Task<IEnumerable<PlayerDTO>> GetAllPlayersOfTheTeam(int id);
+        Task<IEnumerable<PlayerDTO>> GetAllPlayersOfTheTeam(int teamId);
+
+        Task<PlayerDTO> GetPlayer(int playerId);
 
         Task<IEnumerable<TeamDTO>> GetTeams();
 
@@ -21,7 +23,7 @@ namespace FM.Services
 
         Task<bool> UpdateTeamValue(TeamDTO newTeamValue);
 
-        Task<bool> DeleteTeam(string teamName);
+        Task<bool> DeleteTeam(int teamId);
     }
 }
 

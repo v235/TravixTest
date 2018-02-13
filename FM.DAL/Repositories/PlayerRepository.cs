@@ -15,5 +15,10 @@ namespace FM.DAL.Repositories
         {
             _context = context;
         }
+
+        public Task<EntityPlayer> GetById(int id)
+        {
+            return _context.Players.FindAsync(id);
+        }
     }
 }

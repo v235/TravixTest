@@ -26,11 +26,5 @@ namespace FM.DAL.Repositories
         {
             return await _context.Teams.Include(p => p.Players).SingleOrDefaultAsync(t=>t.Id==id);
         }
-
-        public async Task<EntityTeam> GetTeamByName(string name)
-        {
-            return await _context.Teams.Include(p => p.Players)
-                .SingleOrDefaultAsync(t => t.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-        }
     }
 }

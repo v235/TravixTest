@@ -10,6 +10,5 @@ namespace FM.DAL.Repositories
     {
         Task<IEnumerable<EntityTeam>> GetAll();
         Task<EntityTeam> GetById(int id);
-        Task<EntityTeam> GetTeamByName(string name);
     }
 }
