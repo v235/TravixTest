@@ -16,7 +16,6 @@ namespace FM.Web.Tests
     public class PlayerControllerTest
     {
         private readonly Mock<IFMService> _mockFMService;
-        private readonly Mock<ILogger<PlayerController>> _mockLogger;
         private readonly PlayerController _playerController;
 
         public PlayerControllerTest()
@@ -27,8 +26,7 @@ namespace FM.Web.Tests
             });
 
             _mockFMService = new Mock<IFMService>();
-            _mockLogger = new Mock<ILogger<PlayerController>>();
-            _playerController = new PlayerController(_mockFMService.Object, _mockLogger.Object);
+            _playerController = new PlayerController(_mockFMService.Object);
 
         }
 

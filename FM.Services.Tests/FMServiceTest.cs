@@ -100,7 +100,6 @@ namespace FM.Services.Tests
         [Fact]
         public async Task AddNewPlayerToTeamAsyncTest_returns_Id_more_then_zero_wich_is_equal_created()
         {
-
             //Arrange
             Mapper.Initialize(config =>
             {
@@ -126,7 +125,6 @@ namespace FM.Services.Tests
         [Fact]
         public async Task AddNewPlayerToTeamAsyncTest_returns_Id_less_then_zero_wich_is_equal_not_created()
         {
-
             //Arrange
             Mapper.Initialize(config =>
             {
@@ -177,30 +175,13 @@ namespace FM.Services.Tests
             //Arrange
             Mapper.Initialize(config =>
             {
-                config.CreateMap<TeamDTO, EntityTeam>();
+                config.CreateMap<TeamDTO, EntityTeam>().ReverseMap();
             });
             int testId = 1;
             EntityTeam expectedTeam = new EntityTeam()
             {
                 Id = 1,
-                Name = "testTeam",
-                Players = new List<EntityPlayer>()
-                    {
-                        new EntityPlayer()
-                        {
-                            Id = 1,
-                            Name = "Test1",
-                            Position = "TestPos1",
-                            Age = 25
-                        },
-                        new EntityPlayer()
-                        {
-                            Id = 2,
-                            Name = "Test2",
-                            Position = "TestPos2",
-                            Age = 25
-                        }
-                    }
+                Name = "testTeam"
             };
 
             _mockTeamRepository.Setup(r => r.GetByIdAsync(testId)).ReturnsAsync(expectedTeam);
@@ -213,244 +194,136 @@ namespace FM.Services.Tests
 
         }
 
-        //[Fact]
-        //public async Task AddNewTeamAsync_returns_true_wich_is_equal_created()
-        //{
-        //    //Arrange
-        //    Mapper.Initialize(config =>
-        //    {
-        //        config.CreateMap<EntityTeam, TeamDTO>();
-        //    });
-        //    TeamDTO newTeam = new TeamDTO()
-        //    {
-        //        Id = 1,
-        //        Name = "testTeam",
-        //        Players = new List<PlayerDTO>()
-        //        {
-        //            new PlayerDTO()
-        //            {
-        //                Id = 1,
-        //                Name = "Test1",
-        //                Position = "TestPos1",
-        //                Age = 25
-        //            },
-        //            new PlayerDTO()
-        //            {
-        //                Id = 2,
-        //                Name = "Test2",
-        //                Position = "TestPos2",
-        //                Age = 25
-        //            }
-        //        }
-        //    };
+        [Fact]
+        public async Task AddNewTeamAsync_returns_Id_more_then_zero_wich_is_equal_created()
+        {
+            //Arrange
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<EntityTeam, TeamDTO>().ReverseMap();
+            });
+            int expectedteamId = 1;
+            EntityTeam createdTeam = new EntityTeam()
+            {
+                Id = 1,
+                Name = "testTeam"
+            };
 
-        //    _mockTeamRepository.Setup(r => r.Create(It.IsAny<EntityTeam>())).ReturnsAsync(true);
-        //    //Act
-        //    var result = await _fmService.AddNewTeam(newTeam);
-        //    //Assert
-        //    Mapper.Reset();
-        //    Assert.True(result);
+            _mockTeamRepository.Setup(r => r.CreateAsync(It.IsAny<EntityTeam>())).ReturnsAsync(createdTeam);
+            //Act
+            var result = await _fmService.AddNewTeamAsync(new TeamDTO());
+            //Assert
+            Mapper.Reset();
+            Assert.Equal(expectedteamId, result);
 
-        //}
-        //[Fact]
-        //public async Task AddNewTeamAsync_returns_false_wich_is_equal_not_created()
-        //{
-        //    //Arrange
-        //    Mapper.Initialize(config =>
-        //    {
-        //        config.CreateMap<EntityTeam, TeamDTO>();
-        //    });
-        //    TeamDTO newTeam = new TeamDTO()
-        //    {
-        //        Id = 1,
-        //        Name = "testTeam",
-        //        Players = new List<PlayerDTO>()
-        //        {
-        //            new PlayerDTO()
-        //            {
-        //                Id = 1,
-        //                Name = "Test1",
-        //                Position = "TestPos1",
-        //                Age = 25
-        //            },
-        //            new PlayerDTO()
-        //            {
-        //                Id = 2,
-        //                Name = "Test2",
-        //                Position = "TestPos2",
-        //                Age = 25
-        //            }
-        //        }
-        //    };
+        }
 
-        //    _mockTeamRepository.Setup(r => r.Create(It.IsAny<EntityTeam>())).ReturnsAsync(false);
-        //    //Act
-        //    var result = await _fmService.AddNewTeam(newTeam);
-        //    //Assert
-        //    Mapper.Reset();
-        //    Assert.False(result);
+        [Fact]
+        public async Task AddNewTeamAsync_returns_Id_less_then_zero_wich_is_equal_not_created()
+        {
+            //Arrange
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<EntityTeam, TeamDTO>().ReverseMap();
+            });
+            EntityTeam createdTeam = null;
+            _mockTeamRepository.Setup(r => r.CreateAsync(It.IsAny<EntityTeam>())).ReturnsAsync(createdTeam);
+            //Act
+            var result = await _fmService.AddNewTeamAsync(new TeamDTO());
+            //Assert
+            Mapper.Reset();
+            Assert.Equal(0, result);
 
-        //}
+        }
 
-        //[Fact]
-        //public async Task UpdateTeamValueAsync_returns_true_wich_is_equal_updated()
-        //{
-        //    //Arrange
-        //    Mapper.Initialize(config =>
-        //    {
-        //        config.CreateMap<EntityTeam, TeamDTO>();
-        //    });
-        //    TeamDTO newTeam = new TeamDTO()
-        //    {
-        //        Id = 1,
-        //        Name = "testTeam",
-        //        Players = new List<PlayerDTO>()
-        //        {
-        //            new PlayerDTO()
-        //            {
-        //                Id = 1,
-        //                Name = "Test1",
-        //                Position = "TestPos1",
-        //                Age = 25
-        //            },
-        //            new PlayerDTO()
-        //            {
-        //                Id = 2,
-        //                Name = "Test2",
-        //                Position = "TestPos2",
-        //                Age = 25
-        //            }
-        //        }
-        //    };
+        [Fact]
+        public async Task UpdateTeamValueAsync_returns_true_wich_is_equal_updated()
+        {
+            //Arrange
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<EntityTeam, TeamDTO>().ReverseMap();
+            });
+            TeamDTO newTeam = new TeamDTO()
+            {
+                Id = 1,
+                Name = "testTeam"
+            };
 
-        //    _mockTeamRepository.Setup(r => r.Update(It.IsAny<EntityTeam>())).ReturnsAsync(true);
-        //    //Act
-        //    var result = await _fmService.UpdateTeamValue(newTeam);
-        //    //Assert
-        //    Mapper.Reset();
-        //    Assert.True(result);
+            _mockTeamRepository.Setup(r => r.UpdateAsync(It.IsAny<EntityTeam>())).ReturnsAsync(true);
+            //Act
+            var result = await _fmService.UpdateTeamValueAsync(newTeam);
+            //Assert
+            Mapper.Reset();
+            Assert.True(result);
 
-        //}
+        }
 
-        //[Fact]
-        //public async Task UpdateTeamValueAsync_returns_false_wich_is_equal_not_updated()
-        //{
-        //    //Arrange
-        //    Mapper.Initialize(config =>
-        //    {
-        //        config.CreateMap<EntityTeam, TeamDTO>();
-        //    });
-        //    TeamDTO newTeam = new TeamDTO()
-        //    {
-        //        Id = 1,
-        //        Name = "testTeam",
-        //        Players = new List<PlayerDTO>()
-        //        {
-        //            new PlayerDTO()
-        //            {
-        //                Id = 1,
-        //                Name = "Test1",
-        //                Position = "TestPos1",
-        //                Age = 25
-        //            },
-        //            new PlayerDTO()
-        //            {
-        //                Id = 2,
-        //                Name = "Test2",
-        //                Position = "TestPos2",
-        //                Age = 25
-        //            }
-        //        }
-        //    };
+        [Fact]
+        public async Task UpdateTeamValueAsync_returns_false_wich_is_equal_not_updated()
+        {
+            //Arrange
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<EntityTeam, TeamDTO>().ReverseMap();
+            });
+            TeamDTO newTeam = new TeamDTO()
+            {
+                Id = 1,
+                Name = "testTeam"
+            };
 
-        //    _mockTeamRepository.Setup(r => r.Update(It.IsAny<EntityTeam>())).ReturnsAsync(false);
-        //    //Act
-        //    var result = await _fmService.UpdateTeamValue(newTeam);
-        //    //Assert
-        //    Mapper.Reset();
-        //    Assert.False(result);
+            _mockTeamRepository.Setup(r => r.UpdateAsync(It.IsAny<EntityTeam>())).ReturnsAsync(false);
+            //Act
+            var result = await _fmService.UpdateTeamValueAsync(newTeam);
+            //Assert
+            Mapper.Reset();
+            Assert.False(result);
 
-        //}
+        }
 
-        //[Fact]
-        //public async Task DeleteTeamValueAsync_returns_true_wich_is_equal_deleteded()
-        //{
-        //    //Arrange
-        //    Mapper.Initialize(config =>
-        //    {
-        //        config.CreateMap<EntityTeam, TeamDTO>();
-        //    });
-        //    string teamName = "testName";
-        //    EntityTeam expectedTeam = new EntityTeam()
-        //    {
-        //        Id = 1,
-        //        Name = "testTeam",
-        //        Players = new List<EntityPlayer>()
-        //        {
-        //            new EntityPlayer()
-        //            {
-        //                Id = 1,
-        //                Name = "Test1",
-        //                Position = "TestPos1",
-        //                Age = 25
-        //            },
-        //            new EntityPlayer()
-        //            {
-        //                Id = 2,
-        //                Name = "Test2",
-        //                Position = "TestPos2",
-        //                Age = 25
-        //            }
-        //        }
-        //    };
-        //    _mockTeamRepository.Setup(r => r.GetTeamByName(teamName)).ReturnsAsync(expectedTeam);
-        //    _mockTeamRepository.Setup(r => r.Delete(expectedTeam)).ReturnsAsync(true);
-        //    //Act
-        //    var result = await _fmService.DeleteTeam(teamName);
-        //    //Assert
-        //    Mapper.Reset();
-        //    Assert.True(result);
+        [Fact]
+        public async Task DeleteTeamValueAsync_returns_true_wich_is_equal_deleteded()
+        {
+            //Arrange
+            Mapper.Initialize(config => { config.CreateMap<EntityTeam, TeamDTO>(); });
+            int teamId = 1;
+            EntityTeam expectedTeam = new EntityTeam()
+            {
+                Id = 1,
+                Name = "testTeam"
+            };
+            _mockTeamRepository.Setup(r => r.GetByIdAsync(teamId)).ReturnsAsync(expectedTeam);
+            _mockTeamRepository.Setup(r => r.DeleteAsync(expectedTeam)).ReturnsAsync(true);
+            //Act
+            var result = await _fmService.DeleteTeamAsync(teamId);
+            //Assert
+            Mapper.Reset();
+            Assert.True(result);
 
-        //}
-        //[Fact]
-        //public async Task DeleteTeamValueAsync_returns_false_wich_is_equal_not_deleteded()
-        //{
-        //    //Arrange
-        //    Mapper.Initialize(config =>
-        //    {
-        //        config.CreateMap<EntityTeam, TeamDTO>();
-        //    });
-        //    string teamName = "testName";
-        //    EntityTeam expectedTeam = new EntityTeam()
-        //    {
-        //        Id = 1,
-        //        Name = "testTeam",
-        //        Players = new List<EntityPlayer>()
-        //        {
-        //            new EntityPlayer()
-        //            {
-        //                Id = 1,
-        //                Name = "Test1",
-        //                Position = "TestPos1",
-        //                Age = 25
-        //            },
-        //            new EntityPlayer()
-        //            {
-        //                Id = 2,
-        //                Name = "Test2",
-        //                Position = "TestPos2",
-        //                Age = 25
-        //            }
-        //        }
-        //    };
-        //    _mockTeamRepository.Setup(r => r.GetTeamByName(teamName)).ReturnsAsync(expectedTeam);
-        //    _mockTeamRepository.Setup(r => r.Delete(expectedTeam)).ReturnsAsync(false);
-        //    //Act
-        //    var result = await _fmService.DeleteTeam(teamName);
-        //    //Assert
-        //    Mapper.Reset();
-        //    Assert.False(result);
+        }
+        [Fact]
+        public async Task DeleteTeamValueAsync_returns_false_wich_is_equal_not_deleteded()
+        {
+            //Arrange
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<EntityTeam, TeamDTO>();
+            });
+            int teamId = 1;
+            EntityTeam expectedTeam = new EntityTeam()
+            {
+                Id = 1,
+                Name = "testTeam"
+            };
+            _mockTeamRepository.Setup(r => r.GetByIdAsync(teamId)).ReturnsAsync(expectedTeam);
+            _mockTeamRepository.Setup(r => r.DeleteAsync(expectedTeam)).ReturnsAsync(false);
+            //Act
+            var result = await _fmService.DeleteTeamAsync(teamId);
+            //Assert
+            Mapper.Reset();
+            Assert.False(result);
 
-        //}
+        }
     }
 }

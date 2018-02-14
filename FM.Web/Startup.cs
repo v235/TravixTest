@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +18,10 @@ using FM.DAL.Models;
 using FM.DAL.Repositories;
 using FM.Services;
 using FM.Services.Models;
+using FM.Web.ExceptionHandler;
+using FM.Web.Logger;
 using FM.Web.Models;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace FM.Web
 {
@@ -42,7 +47,7 @@ namespace FM.Web
 
             services.AddLogging();
 
-            services.AddMvc();
+            services.AddMvc(config => { config.Filters.Add(typeof(CustomExceptionFilter)); });
 
             services.AddMvc().AddJsonOptions(config =>
             {
@@ -69,10 +74,9 @@ namespace FM.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                factory.AddDebug(LogLevel.Error);
-            }
+
+            factory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+
             app.UseMvc();
 
             seedData.EnsureSeedData().Wait();

@@ -15,101 +15,71 @@ namespace FM.Web.Controllers
     public class TeamController : Controller
     {
         private readonly IFMService _fmService;
-        private readonly ILogger<TeamController> _logger;
 
-        public TeamController(IFMService fmService, ILogger<TeamController> logger)
+        public TeamController(IFMService fmService)
         {
             _fmService = fmService;
-            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            try
-            {
-                return Ok(Mapper.Map<IEnumerable<CreateTeamViewModel>>(await _fmService.GetTeamsAsync()));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to get teams: {0}", ex);
-            }
+            var teams = Mapper.Map<IEnumerable<CreateTeamViewModel>>(await _fmService.GetTeamsAsync());
+            if (teams.Any())
+                return Ok(teams);
             return BadRequest("Failed to get teams");
         }
 
         [HttpGet("{teamId}")]
         public async Task<IActionResult> GetAsync(int teamId)
         {
-            try
-            {
-                return Ok(Mapper.Map<CreateTeamViewModel>(await _fmService.GetTeamAsync(teamId)));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to get team: {0}", ex);
-            }
+            var team = Mapper.Map<CreateTeamViewModel>(await _fmService.GetTeamAsync(teamId));
+            if (team != null)
+                return Ok(team);
             return BadRequest("Failed to get team");
         }
 
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] CreateTeamViewModel team)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    var newTeam = Mapper.Map<TeamDTO>(team);
-                    var createdTeamId = await _fmService.AddNewTeamAsync(newTeam);
-                    if(createdTeamId>0)
+                var newTeam = Mapper.Map<TeamDTO>(team);
+                var createdTeamId = await _fmService.AddNewTeamAsync(newTeam);
+                if (createdTeamId > 0)
                     return Created($"api/teams/{createdTeamId}", Mapper.Map<CreateTeamViewModel>(newTeam));
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to save new team: {0}", ex);
             }
 
             return BadRequest("Failed to save new team");
 
         }
+
         [HttpPut]
         public async Task<IActionResult> PutAsync([FromBody] UpdateTeamViewModel team)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                var newTeamValue = Mapper.Map<TeamDTO>(team);
+                if (await _fmService.UpdateTeamValueAsync(newTeamValue))
                 {
-                    var newTeamValue = Mapper.Map<TeamDTO>(team);
-                    if (await _fmService.UpdateTeamValueAsync(newTeamValue))
-                    {
-                        return Ok(Mapper.Map<UpdateTeamViewModel>(newTeamValue));
-                    }
+                    return Ok(Mapper.Map<UpdateTeamViewModel>(newTeamValue));
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to update team values: {0}", ex);
             }
 
             return BadRequest("Failed to update team values");
 
         }
+
         [HttpDelete("{teamId}")]
         public async Task<IActionResult> DeleteAsync(int teamId)
         {
-            try
+
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                if (await _fmService.DeleteTeamAsync(teamId))
                 {
-                    if (await _fmService.DeleteTeamAsync(teamId))
-                    {
-                        return Ok();
-                    }
+                    return Ok();
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to delete the team: {0}", ex);
             }
 
             return BadRequest("Failed to delete the team");
