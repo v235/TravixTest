@@ -251,19 +251,19 @@ namespace FM.Web.Tests
             {
                 config.CreateMap<UpdateTeamViewModel, TeamDTO>().ReverseMap();
             });
-            var expectednewTeam = new UpdateTeamViewModel()
+            var expectedUpdatedTeam = new UpdateTeamViewModel()
             {
                 Id = 2,
                 Name = "testTeam"
             };
             _mockFMService.Setup(s => s.UpdateTeamValueAsync(It.IsAny<TeamDTO>())).ReturnsAsync(true);
             //Act
-            var result = await _teamController.PutAsync(expectednewTeam) as OkObjectResult;
+            var result = await _teamController.PutAsync(expectedUpdatedTeam) as OkObjectResult;
             var updatedTeam = result.Value as UpdateTeamViewModel;
             //Assert
             Mapper.Reset();
-            Assert.Equal(expectednewTeam.Id, updatedTeam.Id);
-            Assert.Equal(expectednewTeam.Name, updatedTeam.Name);
+            Assert.Equal(expectedUpdatedTeam.Id, updatedTeam.Id);
+            Assert.Equal(expectedUpdatedTeam.Name, updatedTeam.Name);
         }
 
         [Fact]
