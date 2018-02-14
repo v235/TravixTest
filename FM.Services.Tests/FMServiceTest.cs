@@ -170,7 +170,7 @@ namespace FM.Services.Tests
         }
 
         [Fact]
-        public async Task GetTeamAsync_returns_is_team_type_of_TeamDTO()
+        public async Task GetTeamAsync_returns_team()
         {
             //Arrange
             Mapper.Initialize(config =>
