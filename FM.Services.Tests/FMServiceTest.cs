@@ -67,6 +67,42 @@ namespace FM.Services.Tests
                         && r.Age == exp2.Age && r.Position == exp2.Position));
         }
 
+        public async Task GetAllPlayersAsyncTest_return_collection_of_players()
+        {
+            //Arrange
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<PlayerDTO, EntityPlayer>();
+            });
+            var expectedPlayers = new List<EntityPlayer>()
+            {
+                new EntityPlayer()
+                {
+                    Id = 1,
+                    Name = "Test1",
+                    Position = "TestPos1",
+                    Age = 25
+                },
+                new EntityPlayer()
+                {
+                    Id = 2,
+                    Name = "Test2",
+                    Position = "TestPos2",
+                    Age = 25
+                }
+            };
+            _mockPlayerRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(expectedPlayers);
+            //Act
+            var result = await _fmService.GetAllPlayersAsync();
+            //Assert
+            Mapper.Reset();
+            Assert.Collection(expectedPlayers,
+                exp1 => result.Any(r => r.Id == exp1.Id && r.Name == exp1.Name
+                                                        && r.Age == exp1.Age && r.Position == exp1.Position),
+                exp2 => result.Any(r => r.Id == exp2.Id && r.Name == exp2.Name
+                                                        && r.Age == exp2.Age && r.Position == exp2.Position));
+        }
+
         [Fact]
         public async Task GetPlayerAsyncTest_return_player_by_id()
         {
@@ -286,15 +322,14 @@ namespace FM.Services.Tests
         public async Task DeleteTeamValueAsync_returns_true_wich_is_equal_deleteded()
         {
             //Arrange
-            Mapper.Initialize(config => { config.CreateMap<EntityTeam, TeamDTO>(); });
+            Mapper.Initialize(config => { config.CreateMap<EntityTeam, TeamDTO>().ReverseMap(); });
             int teamId = 1;
             EntityTeam expectedTeam = new EntityTeam()
             {
                 Id = 1,
                 Name = "testTeam"
             };
-            _mockTeamRepository.Setup(r => r.GetByIdAsync(teamId)).ReturnsAsync(expectedTeam);
-            _mockTeamRepository.Setup(r => r.DeleteAsync(expectedTeam)).ReturnsAsync(true);
+            _mockTeamRepository.Setup(r => r.DeleteAsync(It.IsAny<EntityTeam>())).ReturnsAsync(true);
             //Act
             var result = await _fmService.DeleteTeamAsync(teamId);
             //Assert
@@ -308,16 +343,10 @@ namespace FM.Services.Tests
             //Arrange
             Mapper.Initialize(config =>
             {
-                config.CreateMap<EntityTeam, TeamDTO>();
+                config.CreateMap<EntityTeam, TeamDTO>().ReverseMap();
             });
             int teamId = 1;
-            EntityTeam expectedTeam = new EntityTeam()
-            {
-                Id = 1,
-                Name = "testTeam"
-            };
-            _mockTeamRepository.Setup(r => r.GetByIdAsync(teamId)).ReturnsAsync(expectedTeam);
-            _mockTeamRepository.Setup(r => r.DeleteAsync(expectedTeam)).ReturnsAsync(false);
+            _mockTeamRepository.Setup(r => r.DeleteAsync(It.IsAny<EntityTeam>())).ReturnsAsync(false);
             //Act
             var result = await _fmService.DeleteTeamAsync(teamId);
             //Assert

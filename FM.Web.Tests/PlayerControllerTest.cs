@@ -32,10 +32,9 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Get_Returns_statusCode_200()
+        public async Task GetAsync_Returns_statusCode_200()
         {
             //Arrange
-            int teamId = 1;
             var expextedPlayers = new List<PlayerDTO>()
             {
                 new PlayerDTO()
@@ -53,32 +52,30 @@ namespace FM.Web.Tests
                     Age = 25
                 }
             };
-            _mockFMService.Setup(s => s.GetAllPlayersOfTheTeamAsync(teamId)).ReturnsAsync(expextedPlayers);
+            _mockFMService.Setup(s => s.GetAllPlayersAsync()).ReturnsAsync(expextedPlayers);
             //Act
-            var result = await _playerController.GetAsync(teamId) as OkObjectResult;
+            var result = await _playerController.Get() as OkObjectResult;
             //Assert
             Mapper.Reset();
             Assert.Equal(200, result.StatusCode);
         }
 
         [Fact]
-        public async Task Get_Returns_BadRequest()
+        public async Task GetAsync_Returns_BadRequest()
         {
             //Arrange
-            int teamId = 1;
-            _mockFMService.Setup(s => s.GetAllPlayersOfTheTeamAsync(teamId)).ReturnsAsync(Enumerable.Empty<PlayerDTO>());
+            _mockFMService.Setup(s => s.GetAllPlayersAsync()).ReturnsAsync(Enumerable.Empty<PlayerDTO>());
             //Act
-            var result = await _playerController.GetAsync(teamId) as BadRequestObjectResult;
+            var result = await _playerController.Get() as BadRequestObjectResult;
             //Assert
             Mapper.Reset();
             Assert.Equal(400, result.StatusCode);
         }
 
         [Fact]
-        public async Task Get_Returns_list_of_players()
+        public async Task GetAsync_Returns_list_of_players()
         {
             //Arrange
-            int teamId = 1;
             var expextedPlayers = new List<PlayerDTO>()
             {
                 new PlayerDTO()
@@ -96,21 +93,21 @@ namespace FM.Web.Tests
                     Age = 25
                 }
             };
-            _mockFMService.Setup(s => s.GetAllPlayersOfTheTeamAsync(teamId)).ReturnsAsync(expextedPlayers);
+            _mockFMService.Setup(s => s.GetAllPlayersAsync()).ReturnsAsync(expextedPlayers);
             //Act
-            var result = await _playerController.GetAsync(teamId) as OkObjectResult;
+            var result = await _playerController.Get() as OkObjectResult;
             var listOfPlayers = result.Value as List<CreatePlayerViewModel>;
             //Assert
             Mapper.Reset();
             Assert.Collection(expextedPlayers,
-                exp1 => listOfPlayers.Any(r => 
+                exp1 => listOfPlayers.Any(r =>
                     r.Name == exp1.Name && r.Position == exp1.Position && r.Age == exp1.Age),
                 exp2 => listOfPlayers.Any(r =>
                     r.Name == exp2.Name && r.Position == exp2.Position && r.Age == exp2.Age));
         }
 
         [Fact]
-        public async Task Get_by_Id_Returns_statusCode_200()
+        public async Task GetByIdAsync_Returns_statusCode_200()
         {
             //Arrange
             int playerId = 1;
@@ -130,7 +127,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Get_by_Id_Returns_player()
+        public async Task GetByIdAsync_Returns_player()
         {
             //Arrange
             int playerId = 1;
@@ -153,7 +150,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Get_by_Id_Returns_BadRequest()
+        public async Task GetByIdAsync_Returns_BadRequest()
         {
             //Arrange
             int playerId = 1;
@@ -167,7 +164,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Post_Returns_statusCode_201()
+        public async Task PostAsync_Returns_statusCode_201()
         {
             //Arrange
             int expectedId = 1;
@@ -188,7 +185,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Post_Returns_BadRequest()
+        public async Task PostAsync_Returns_BadRequest()
         {
             //Arrange
             _mockFMService.Setup(s => s.AddNewPlayerAsync(It.IsAny<PlayerDTO>())).ReturnsAsync(0);
@@ -200,11 +197,11 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Post_Returns_created_location()
+        public async Task PostAsync_Returns_created_location()
         {
             //Arrange
             int expectedId = 1;
-            string expectedLocation = $"api/teams/2/players/{expectedId}";
+            string expectedLocation = $"api/players/{expectedId}";
             CreatePlayerViewModel expectednewPlayer = new CreatePlayerViewModel()
             {
                 Name = "test",

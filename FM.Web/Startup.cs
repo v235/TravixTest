@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,9 +12,9 @@ using FM.DAL.Repositories;
 using FM.Services;
 using FM.Services.Models;
 using FM.Web.ExceptionHandler;
-using FM.Web.Logger;
 using FM.Web.Models;
-using Microsoft.AspNetCore.Diagnostics;
+using NLog.Extensions.Logging;
+using NLog.Web;
 
 namespace FM.Web
 {
@@ -58,6 +51,7 @@ namespace FM.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
            FMContextSeedData seedData, ILoggerFactory factory)
         {
+            env.ConfigureNLog("nlog.config");
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 scope.ServiceProvider.GetService<FMContext>().Database.Migrate();
@@ -75,7 +69,8 @@ namespace FM.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            factory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+            factory.AddNLog();
+            app.AddNLogWeb();
 
             app.UseMvc();
 

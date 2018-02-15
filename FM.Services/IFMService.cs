@@ -11,6 +11,8 @@ namespace FM.Services
     {
         Task<IEnumerable<PlayerDTO>> GetAllPlayersOfTheTeamAsync(int teamId);
 
+        Task<IEnumerable<PlayerDTO>> GetAllPlayersAsync();
+
         Task<PlayerDTO> GetPlayerAsync(int playerId);
 
         Task<IEnumerable<TeamDTO>> GetTeamsAsync();

@@ -27,6 +27,12 @@ namespace FM.Services
             return Mapper.Map<IEnumerable<PlayerDTO>>(players);
         }
 
+        public async Task<IEnumerable<PlayerDTO>> GetAllPlayersAsync()
+        {
+            var players = await _playerRepository.GetAllAsync();
+            return Mapper.Map<IEnumerable<PlayerDTO>>(players);
+        }
+
         public async Task<PlayerDTO> GetPlayerAsync(int playerId)
         {
             return Mapper.Map<PlayerDTO>(await _playerRepository.GetByIdAsync(playerId));
@@ -66,13 +72,11 @@ namespace FM.Services
 
         public async Task<bool> DeleteTeamAsync(int teamId)
         {
-            var teamToDelete = await _teamRepository.GetByIdAsync(teamId);
-            if (teamToDelete != null)
+            TeamDTO teamToDelete = new TeamDTO()
             {
-                return await _teamRepository.DeleteAsync(teamToDelete);
-            }
-
-            return false;
+                Id = teamId
+            };
+            return await _teamRepository.DeleteAsync(Mapper.Map<EntityTeam>(teamToDelete));
         }
     }
 }

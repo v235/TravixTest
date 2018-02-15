@@ -8,6 +8,5 @@ namespace FM.DAL.Repositories
 {
     public interface IPlayerRepository : IBaseRepository<EntityPlayer>
     {
-        Task<EntityPlayer> GetByIdAsync(int id);
     }
 }

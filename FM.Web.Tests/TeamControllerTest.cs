@@ -28,7 +28,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Get_Returns_statusCode_200()
+        public async Task GetAsync_Returns_statusCode_200()
         {
             //Arrange
             Mapper.Initialize(config => { config.CreateMap<CreateTeamViewModel, TeamDTO>().ReverseMap(); });
@@ -55,7 +55,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Get_Returns_BadRequest()
+        public async Task GetAsync_Returns_BadRequest()
         {
             //Arrange
             Mapper.Initialize(config =>
@@ -71,7 +71,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Get_Returns_list_of_teams()
+        public async Task GetAsync_Returns_list_of_teams()
         {
             //Arrange
             Mapper.Initialize(config => { config.CreateMap<CreateTeamViewModel, TeamDTO>().ReverseMap(); });
@@ -101,7 +101,88 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Get_by_Id_Returns_statusCode_200()
+        public async Task GetPlayersAsync_Returns_statusCode_200()
+        {
+            //Arrange
+            Mapper.Initialize(config => { config.CreateMap<CreatePlayerViewModel, TeamDTO>().ReverseMap(); });
+            int teamId = 1;
+            var expextedPlayers = new List<PlayerDTO>()
+            {
+                new PlayerDTO()
+                {
+                    Id = 1,
+                    Name = "Test1",
+                    Position = "TestPos1",
+                    Age = 25
+                },
+                new PlayerDTO()
+                {
+                    Id = 2,
+                    Name = "Test2",
+                    Position = "TestPos2",
+                    Age = 25
+                }
+            };
+            _mockFMService.Setup(s => s.GetAllPlayersOfTheTeamAsync(teamId)).ReturnsAsync(expextedPlayers);
+            //Act
+            var result = await _teamController.GetPlayersAsync(teamId) as OkObjectResult;
+            //Assert
+            Mapper.Reset();
+            Assert.Equal(200, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task Get_Returns_BadRequest()
+        {
+            //Arrange
+            Mapper.Initialize(config => { config.CreateMap<CreatePlayerViewModel, TeamDTO>().ReverseMap(); });
+            int teamId = 1;
+            _mockFMService.Setup(s => s.GetAllPlayersOfTheTeamAsync(teamId)).ReturnsAsync(Enumerable.Empty<PlayerDTO>());
+            //Act
+            var result = await _teamController.GetPlayersAsync(teamId) as BadRequestObjectResult;
+            //Assert
+            Mapper.Reset();
+            Assert.Equal(400, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task Get_Returns_list_of_players()
+        {
+            //Arrange
+            Mapper.Initialize(config => { config.CreateMap<CreatePlayerViewModel, TeamDTO>().ReverseMap(); });
+            int teamId = 1;
+            var expextedPlayers = new List<PlayerDTO>()
+            {
+                new PlayerDTO()
+                {
+                    Id = 1,
+                    Name = "Test1",
+                    Position = "TestPos1",
+                    Age = 25
+                },
+                new PlayerDTO()
+                {
+                    Id = 2,
+                    Name = "Test2",
+                    Position = "TestPos2",
+                    Age = 25
+                }
+            };
+            _mockFMService.Setup(s => s.GetAllPlayersOfTheTeamAsync(teamId)).ReturnsAsync(expextedPlayers);
+            //Act
+            var result = await _teamController.GetPlayersAsync(teamId) as OkObjectResult;
+            var listOfPlayers = result.Value as List<CreatePlayerViewModel>;
+            //Assert
+            Mapper.Reset();
+            Assert.Collection(expextedPlayers,
+                exp1 => listOfPlayers.Any(r =>
+                    r.Name == exp1.Name && r.Position == exp1.Position && r.Age == exp1.Age),
+                exp2 => listOfPlayers.Any(r =>
+                    r.Name == exp2.Name && r.Position == exp2.Position && r.Age == exp2.Age));
+        }
+
+        [Fact]
+        public async Task Get_by_IdAsync_Returns_statusCode_200()
         {
             //Arrange
             Mapper.Initialize(config => { config.CreateMap<CreateTeamViewModel, TeamDTO>().ReverseMap(); });
@@ -120,7 +201,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Get_by_Id_Returns_team()
+        public async Task Get_by_IdAsync_Returns_team()
         {
             //Arrange
             Mapper.Initialize(config => { config.CreateMap<CreateTeamViewModel, TeamDTO>().ReverseMap(); });
@@ -140,7 +221,7 @@ namespace FM.Web.Tests
 
         }
         [Fact]
-        public async Task Get_by_Id_Returns_BadRequest()
+        public async Task Get_by_IdAsync_Returns_BadRequest()
         {
             //Arrange
             Mapper.Initialize(config => { config.CreateMap<CreateTeamViewModel, TeamDTO>().ReverseMap(); });
@@ -155,7 +236,7 @@ namespace FM.Web.Tests
 
         }
         [Fact]
-        public async Task Post_Returns_statusCode_201()
+        public async Task PostAsync_Returns_statusCode_201()
         {
             //Arrang
             Mapper.Initialize(config =>
@@ -178,7 +259,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Post_Returns_created_location()
+        public async Task PostAsync_Returns_created_location()
         {
             //Arrang
             Mapper.Initialize(config =>
@@ -201,7 +282,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Post_Returns_BadRequest()
+        public async Task PostAsync_Returns_BadRequest()
         {
             //Arrang
             Mapper.Initialize(config =>
@@ -223,7 +304,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Put_Returns_statusCode_200()
+        public async Task PutAsync_Returns_statusCode_200()
         {
             //Arrang
             Mapper.Initialize(config =>
@@ -244,7 +325,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Put_Returns_updatedTeam()
+        public async Task PutAsync_Returns_updatedTeam()
         {
             //Arrang
             Mapper.Initialize(config =>
@@ -267,7 +348,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Put_Returns_BadRequest()
+        public async Task PutAsync_Returns_BadRequest()
         {
             //Arrange
             Mapper.Initialize(config =>
@@ -283,7 +364,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Delete_Returns_and_statusCode_200()
+        public async Task DeleteAsync_Returns_and_statusCode_200()
         {
             //Arrang
             Mapper.Initialize(config =>
@@ -300,7 +381,7 @@ namespace FM.Web.Tests
         }
 
         [Fact]
-        public async Task Delete_Returns_BadRequest()
+        public async Task DeleteAsync_Returns_BadRequest()
         {
             //Arrange
             Mapper.Initialize(config =>

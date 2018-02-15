@@ -30,6 +30,16 @@ namespace FM.Web.Controllers
             return BadRequest("Failed to get teams");
         }
 
+        [HttpGet("{teamId}/players")]
+        public async Task<IActionResult> GetPlayersAsync(int teamId)
+        {
+            var players = Mapper.Map<IEnumerable<CreatePlayerViewModel>>
+                (await _fmService.GetAllPlayersOfTheTeamAsync(teamId));
+            if (players.Any())
+                return Ok(players);
+            return BadRequest("Failed to get players of the team");
+        }
+
         [HttpGet("{teamId}")]
         public async Task<IActionResult> GetAsync(int teamId)
         {

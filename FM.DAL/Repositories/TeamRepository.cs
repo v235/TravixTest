@@ -17,14 +17,10 @@ namespace FM.DAL.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<EntityTeam>> GetAllAsync()
-        {
-            return await _context.Teams.ToListAsync();
-        }
-
-        public async Task<EntityTeam> GetByIdAsync(int id)
+        public override async Task<EntityTeam> GetByIdAsync(int id)
         {
             return await _context.Teams.Include(p => p.Players).SingleOrDefaultAsync(t=>t.Id==id);
         }
+
     }
 }
