@@ -43,7 +43,10 @@ namespace FM.DAL.Repositories
         }
         public async Task<bool> DeleteAsync(T entity)
         {
-            _entities.Attach(entity);
+            if (!_entities.Local.Any(e => e == entity))
+            {
+                _entities.Attach(entity);
+            }
             _entities.Remove(entity);
             return await SaveChangesAsync();
         }
