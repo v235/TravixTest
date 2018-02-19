@@ -42,7 +42,7 @@ namespace FM.Web.Controllers
             return BadRequest("Failed to get player"); 
         }
 
-        [HttpPost("player")]
+        [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] CreatePlayerViewModel player)
         {
             if (ModelState.IsValid)
