@@ -32,20 +32,7 @@ namespace FM.Web.Tests
         {
             //Arrange
             Mapper.Initialize(config => { config.CreateMap<CreateTeamViewModel, TeamDTO>().ReverseMap(); });
-            var expextedTeams = new List<TeamDTO>()
-            {
-                new TeamDTO()
-                {
-                    Id = 1,
-                    Name = "testTeam"
-                },
-                new TeamDTO()
-                {
-                    Id = 2,
-                    Name = "testTeam2"
-                }
-
-            };
+            var expextedTeams = GetExpectedTeams();
             _mockFMService.Setup(s => s.GetTeamsAsync()).ReturnsAsync(expextedTeams);
             //Act
             var result = await _teamController.GetAsync() as OkObjectResult;
@@ -75,20 +62,7 @@ namespace FM.Web.Tests
         {
             //Arrange
             Mapper.Initialize(config => { config.CreateMap<CreateTeamViewModel, TeamDTO>().ReverseMap(); });
-            var expextedTeams = new List<TeamDTO>()
-            {
-                new TeamDTO()
-                {
-                    Id = 1,
-                    Name = "testTeam"
-                },
-                new TeamDTO()
-                {
-                    Id = 2,
-                    Name = "testTeam2"
-                }
-
-            };
+            var expextedTeams = GetExpectedTeams();
             _mockFMService.Setup(s => s.GetTeamsAsync()).ReturnsAsync(expextedTeams);
             //Act
             var result = await _teamController.GetAsync() as OkObjectResult;
@@ -106,23 +80,7 @@ namespace FM.Web.Tests
             //Arrange
             Mapper.Initialize(config => { config.CreateMap<CreatePlayerViewModel, TeamDTO>().ReverseMap(); });
             int teamId = 1;
-            var expextedPlayers = new List<PlayerDTO>()
-            {
-                new PlayerDTO()
-                {
-                    Id = 1,
-                    Name = "Test1",
-                    Position = "TestPos1",
-                    Age = 25
-                },
-                new PlayerDTO()
-                {
-                    Id = 2,
-                    Name = "Test2",
-                    Position = "TestPos2",
-                    Age = 25
-                }
-            };
+            var expextedPlayers = GetExpectedPlayers();
             _mockFMService.Setup(s => s.GetAllPlayersOfTheTeamAsync(teamId)).ReturnsAsync(expextedPlayers);
             //Act
             var result = await _teamController.GetPlayersAsync(teamId) as OkObjectResult;
@@ -151,23 +109,7 @@ namespace FM.Web.Tests
             //Arrange
             Mapper.Initialize(config => { config.CreateMap<CreatePlayerViewModel, TeamDTO>().ReverseMap(); });
             int teamId = 1;
-            var expextedPlayers = new List<PlayerDTO>()
-            {
-                new PlayerDTO()
-                {
-                    Id = 1,
-                    Name = "Test1",
-                    Position = "TestPos1",
-                    Age = 25
-                },
-                new PlayerDTO()
-                {
-                    Id = 2,
-                    Name = "Test2",
-                    Position = "TestPos2",
-                    Age = 25
-                }
-            };
+            var expextedPlayers = GetExpectedPlayers();
             _mockFMService.Setup(s => s.GetAllPlayersOfTheTeamAsync(teamId)).ReturnsAsync(expextedPlayers);
             //Act
             var result = await _teamController.GetPlayersAsync(teamId) as OkObjectResult;
@@ -206,11 +148,7 @@ namespace FM.Web.Tests
             //Arrange
             Mapper.Initialize(config => { config.CreateMap<CreateTeamViewModel, TeamDTO>().ReverseMap(); });
             int teamId = 1;
-            var expextedTeam = new TeamDTO()
-            {
-                Id = teamId,
-                Name = "testTeam"
-            };
+            var expextedTeam = GetExpectedTeam();
             _mockFMService.Setup(s => s.GetTeamAsync(teamId)).ReturnsAsync(expextedTeam);
             //Act
             var result = await _teamController.GetAsync(teamId) as OkObjectResult;
@@ -244,11 +182,7 @@ namespace FM.Web.Tests
                 config.CreateMap<CreateTeamViewModel, TeamDTO>().ReverseMap();
             });
             int expectedId = 1;
-            var expectednewTeam = new CreateTeamViewModel()
-            {
-                Name = "testTeam"
-
-            };
+            var expectednewTeam = Mapper.Map<CreateTeamViewModel>(GetExpectedTeam());
             _mockFMService.Setup(s => s.AddNewTeamAsync(It.IsAny<TeamDTO>())).ReturnsAsync(expectedId);
             //Act
             var result = await _teamController.PostAsync(expectednewTeam) as CreatedResult;
@@ -268,11 +202,7 @@ namespace FM.Web.Tests
             });
             int expectedId = 1;
             string expectedLocation = "api/teams/1";
-            var expectednewTeam = new CreateTeamViewModel()
-            {
-                Name = "testTeam"
-
-            };
+            var expectednewTeam = Mapper.Map<CreateTeamViewModel>(GetExpectedTeam());
             _mockFMService.Setup(s => s.AddNewTeamAsync(It.IsAny<TeamDTO>())).ReturnsAsync(expectedId);
             //Act
             var result = await _teamController.PostAsync(expectednewTeam) as CreatedResult;
@@ -290,11 +220,7 @@ namespace FM.Web.Tests
                 config.CreateMap<CreateTeamViewModel, TeamDTO>().ReverseMap();
             });
             int expectedId = 1;
-            var expectednewTeam = new CreateTeamViewModel()
-            {
-                Name = "testTeam"
-
-            };
+            var expectednewTeam = Mapper.Map<CreateTeamViewModel>(GetExpectedTeam());
             _mockFMService.Setup(s => s.AddNewTeamAsync(It.IsAny<TeamDTO>())).ReturnsAsync(0);
             //Act
             var result = await _teamController.PostAsync(expectednewTeam) as BadRequestObjectResult;
@@ -311,11 +237,7 @@ namespace FM.Web.Tests
             {
                 config.CreateMap<UpdateTeamViewModel, TeamDTO>().ReverseMap();
             });
-            var expectednewTeam = new UpdateTeamViewModel()
-            {
-                Name = "testTeam"
-
-            };
+            var expectednewTeam = Mapper.Map<UpdateTeamViewModel>(GetExpectedTeam());
             _mockFMService.Setup(s => s.UpdateTeamValueAsync(It.IsAny<TeamDTO>())).ReturnsAsync(true);
             //Act
             var result = await _teamController.PutAsync(expectednewTeam) as OkObjectResult;
@@ -332,11 +254,7 @@ namespace FM.Web.Tests
             {
                 config.CreateMap<UpdateTeamViewModel, TeamDTO>().ReverseMap();
             });
-            var expectedUpdatedTeam = new UpdateTeamViewModel()
-            {
-                Id = 2,
-                Name = "testTeam"
-            };
+            var expectedUpdatedTeam = Mapper.Map<UpdateTeamViewModel>(GetExpectedTeam());
             _mockFMService.Setup(s => s.UpdateTeamValueAsync(It.IsAny<TeamDTO>())).ReturnsAsync(true);
             //Act
             var result = await _teamController.PutAsync(expectedUpdatedTeam) as OkObjectResult;
@@ -395,6 +313,54 @@ namespace FM.Web.Tests
             //Assert
             Mapper.Reset();
             Assert.Equal(400, result.StatusCode);
+        }
+
+        private List<TeamDTO> GetExpectedTeams()
+        {
+            return new List<TeamDTO>()
+            {
+                new TeamDTO()
+                {
+                    Id = 1,
+                    Name = "testTeam"
+                },
+                new TeamDTO()
+                {
+                    Id = 2,
+                    Name = "testTeam2"
+                }
+
+            };
+        }
+
+        private List<PlayerDTO> GetExpectedPlayers()
+        {
+            return new List<PlayerDTO>()
+            {
+                new PlayerDTO()
+                {
+                    Id = 1,
+                    Name = "Test1",
+                    Position = "TestPos1",
+                    Age = 25
+                },
+                new PlayerDTO()
+                {
+                    Id = 2,
+                    Name = "Test2",
+                    Position = "TestPos2",
+                    Age = 25
+                }
+            };
+        }
+
+        private TeamDTO GetExpectedTeam()
+        {
+            return new TeamDTO()
+            {
+                Id = 1,
+                Name = "testTeam"
+            };
         }
 
     }
